@@ -5,6 +5,10 @@
   "main": "dist/index.js",
   "author": "PaulCamper",
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:paulcamper/prometheus-node-metrics.git"
+  },
   "scripts": {
     "build": "babel src -d dist --copy-files"
   },
