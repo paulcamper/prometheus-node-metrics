@@ -1,5 +1,5 @@
 {
-  "name": "prometheus-metrics",
+  "name": "prometheus-node-metrics",
   "version": "1.0.0",
   "description": "Prometheus metrics for PaulCamper web apps",
   "main": "index.js",
