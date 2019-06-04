@@ -64,7 +64,6 @@ function registerRoute(app) {
   // track requests
   app.use(function (req, res, next) {
     var responseTimeInMs = Date.now() - res.locals.startEpoch;
-    console.log(req.method, req.path, res.statusCode);
     httpRequestDurationMicroseconds.labels(req.method, req.route.path, res.statusCode).observe(responseTimeInMs);
     next();
   });
@@ -91,7 +90,6 @@ function pushLoop() {
   }
 
   setInterval(function () {
-    console.log('pushing');
     gateway.push({ jobName: jobName, groupings: groupings }, function (err) {
       if (err) {
         console.log('Prometheus push error: ' + err);

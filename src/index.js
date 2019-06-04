@@ -49,7 +49,6 @@ function registerRoute(app) {
   // track requests
   app.use((req, res, next) => {
     const responseTimeInMs = Date.now() - res.locals.startEpoch
-    console.log(req.method, req.path, res.statusCode)
     httpRequestDurationMicroseconds
       .labels(req.method, req.route.path, res.statusCode)
       .observe(responseTimeInMs)
@@ -78,7 +77,6 @@ function pushLoop() {
   }
 
   setInterval(() => {
-    console.log('pushing')
     gateway.push({ jobName, groupings }, (err) => {
       if (err) {
         console.log(`Prometheus push error: ${err}`)
