@@ -1,0 +1,12 @@
+{
+  "name": "prometheus-metrics",
+  "version": "1.0.0",
+  "description": "Prometheus metrics for PaulCamper web apps",
+  "main": "index.js",
+  "author": "PaulCamper",
+  "license": "MIT",
+  "dependencies": {
+    "basic-auth": "^2.0.1",
+    "prom-client": "^11.3.0"
+  }
+}

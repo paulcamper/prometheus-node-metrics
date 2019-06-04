@@ -1,0 +1,18 @@
+Prometheus metrics for Node.js apps
+
+Please set the following ENV vars:
+
+- HEROKU_APP_NAME
+- STAGE
+- PROMETHEUS_ENABLED
+- PROMETHEUS_USERNAME
+- PROMETHEUS_PASSWORD
+- PROMETHEUS_PUSH_ENABLED
+- PROMETHEUS_PUSH_USERNAME
+- PROMETHEUS_PUSH_PASSWORD
+- PROMETHEUS_PUSH_URL
+- PROMETHEUS_PUSH_RATE
+
+Prometheus dashboard:
+
+https://prometheus.paulcamper.com/graph
