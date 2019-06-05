@@ -64,7 +64,7 @@ function registerRoute(app) {
   // track requests
   app.use(function (req, res, next) {
     var responseTimeInMs = Date.now() - res.locals.startEpoch;
-    httpRequestDurationMicroseconds.labels(req.method, req.route.path, res.statusCode).observe(responseTimeInMs);
+    httpRequestDurationMicroseconds.labels(req.method, req.path, res.statusCode).observe(responseTimeInMs);
     next();
   });
 }
