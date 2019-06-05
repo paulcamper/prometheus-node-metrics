@@ -22,18 +22,12 @@ collectDefaultMetrics({ register })
 const httpRequestDurationMicroseconds = new client.Histogram({
   name: 'http_request_duration_ms',
   help: 'Duration of HTTP requests in ms',
-  labelNames: ['route'],
+  labelNames: ['method', 'route', 'code'],
   // buckets for response time from 0.1ms to 500ms
   buckets: [0.10, 5, 15, 50, 100, 200, 300, 400, 500],
 })
 
 function registerRoute(app) {
-  // Runs before each requests
-  app.use((req, res, next) => {
-    res.locals.startEpoch = Date.now()
-    next()
-  })
-
   app.get('/metrics', (req, res) => {
     const credentials = auth(req)
     if (!credentials || credentials.name !== PROMETHEUS_USERNAME || credentials.pass !== PROMETHEUS_PASSWORD) {
@@ -45,8 +39,18 @@ function registerRoute(app) {
     res.set('Content-Type', register.contentType)
     res.end(register.metrics())
   })
+}
 
-  // track requests
+// Runs before each requests
+export function beforeRequest(app) {
+  app.use((req, res, next) => {
+    res.locals.startEpoch = Date.now()
+    next()
+  })
+}
+
+// track requests
+export function afterRequest(app) {
   app.use((req, res, next) => {
     const responseTimeInMs = Date.now() - res.locals.startEpoch
     httpRequestDurationMicroseconds
