@@ -3,6 +3,8 @@
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
+exports.beforeRequest = beforeRequest;
+exports.afterRequest = afterRequest;
 exports.default = initMetrics;
 
 var _promClient = require('prom-client');
@@ -37,18 +39,12 @@ collectDefaultMetrics({ register: register });
 var httpRequestDurationMicroseconds = new _promClient2.default.Histogram({
   name: 'http_request_duration_ms',
   help: 'Duration of HTTP requests in ms',
-  labelNames: ['route'],
+  labelNames: ['method', 'route', 'code'],
   // buckets for response time from 0.1ms to 500ms
   buckets: [0.10, 5, 15, 50, 100, 200, 300, 400, 500]
 });
 
 function registerRoute(app) {
-  // Runs before each requests
-  app.use(function (req, res, next) {
-    res.locals.startEpoch = Date.now();
-    next();
-  });
-
   app.get('/metrics', function (req, res) {
     var credentials = (0, _basicAuth2.default)(req);
     if (!credentials || credentials.name !== PROMETHEUS_USERNAME || credentials.pass !== PROMETHEUS_PASSWORD) {
@@ -60,8 +56,18 @@ function registerRoute(app) {
     res.set('Content-Type', register.contentType);
     res.end(register.metrics());
   });
+}
 
-  // track requests
+// Runs before each requests
+function beforeRequest(app) {
+  app.use(function (req, res, next) {
+    res.locals.startEpoch = Date.now();
+    next();
+  });
+}
+
+// track requests
+function afterRequest(app) {
   app.use(function (req, res, next) {
     var responseTimeInMs = Date.now() - res.locals.startEpoch;
     httpRequestDurationMicroseconds.labels(req.method, req.path, res.statusCode).observe(responseTimeInMs);
